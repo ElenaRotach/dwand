@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -11,6 +12,7 @@ use app\models\LoginForm as Login;
 use app\models\Signup;
 use app\models\ContactForm;
 use app\models\Post;
+use app\models\Comment;
 
 class SiteController extends Controller
 {
@@ -63,9 +65,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $comments=[];
         $model = Post::find()->all();
         //var_dump("test");exit();
-        return $this->render('index', ['model' => $model]);
+        foreach ($model as $item){
+            $comments[$item->id]= $value=count(Comment::find()->where('post_id = ' . $item->id)->all());
+        }
+        return $this->render('index', ['model' => $model,
+                                            'comments' => $comments
+            ]);
     }
 
     /**
@@ -85,7 +93,7 @@ class SiteController extends Controller
         }
         return $this->render('login', [
             'model' => $model,
-        ]);*/
+        ]);*///if (Yii::$app->user->identity->isAdmin) {
         if (!Yii::$app->getUser()->isGuest) {
             return $this->goHome();
         }
