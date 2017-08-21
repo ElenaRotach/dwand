@@ -1,7 +1,6 @@
 <?php
 
 namespace app\modules\admin\controllers;
-/*test*/
 use Yii;
 use app\models\Comment;
 use app\models\CommentSearch;

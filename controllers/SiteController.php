@@ -1,7 +1,5 @@
 <?php
-
 namespace app\controllers;
-
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
@@ -13,7 +11,6 @@ use app\models\Signup;
 use app\models\ContactForm;
 use app\models\Post;
 use app\models\Comment;
-
 class SiteController extends Controller
 {
     /**
@@ -41,7 +38,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * @inheritdoc
      */
@@ -57,7 +53,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * Displays homepage.
      *
@@ -65,17 +60,25 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $comments=[];
-        $model = Post::find()->all();
+        //$comments=[];
+        $model = Post::find()
+            ->Select(['p.id, p.title, p.description, p.views, count(c.id) as comments'])
+            ->alias('p')
+            ->leftJoin(Comment::tableName().' c', 'c.post_id=p.id')
+            ->groupBy('c.post_id, p.id')
+            ->limit(10)
+            ->offset(0)
+        //var_dump($model->createCommand()->getRawSql());exit();
+            ->asArray()
+            ->all();
         //var_dump("test");exit();
-        foreach ($model as $item){
+        /*foreach ($model as $item){
             $comments[$item->id]= $value=count(Comment::find()->where('post_id = ' . $item->id)->all());
-        }
-        return $this->render('index', ['model' => $model,
-                                            'comments' => $comments
-            ]);
-    }
+        }*/
 
+        return $this->render('index', ['model' => $model
+        ]);
+    }
     /**
      * Login action.
      *
@@ -86,7 +89,6 @@ class SiteController extends Controller
         /*if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
@@ -97,7 +99,6 @@ class SiteController extends Controller
         if (!Yii::$app->getUser()->isGuest) {
             return $this->goHome();
         }
-
         $model = new Login();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
@@ -115,7 +116,6 @@ class SiteController extends Controller
                 return $this->goHome();
             }
         }
-
         return $this->render('signup', [
             'model' => $model,
         ]);
@@ -128,10 +128,8 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
-
     /**
      * Displays contact page.
      *
@@ -142,14 +140,12 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         }
         return $this->render('contact', [
             'model' => $model,
         ]);
     }
-
     /**
      * Displays about page.
      *
