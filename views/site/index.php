@@ -20,7 +20,7 @@ $this->title = 'task';
                     </span>
                 </div>
                 <div class="views col-lg-6"><i class="fa fa-eye" aria-hidden="true"></i>&emsp;Просмотров: <?= $views = $item->views ? :'0' ?></div>
-                <div class="comments col-lg-6"><i class="fa fa-comments-o" aria-hidden="true">Комментарии: <?= $comments[$item->id] ? :'0' ?></div>
+                <div class="comments col-lg-6"><i class="fa fa-comments-o" aria-hidden="true">Комментарии: <?= $item->comments ? :'0' ?></div>
             </article>
             <hr>
         <?php endforeach ?>

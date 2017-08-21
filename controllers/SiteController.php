@@ -65,14 +65,21 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $comments=[];
-        $model = Post::find()->all();
+        //$comments=[];
+        $model = Post::find()
+            ->Select(['p.id, p.title, p.description, p.views, count(c.id) as comments'])
+            ->alias('p')
+            ->leftJoin(Comment::tableName().' c', 'c.post_id=p.id')
+            ->groupBy('c.post_id')
+            ->limit(10)
+            ->offset(0)
+            ->asArray()
+            ->all();
         //var_dump("test");exit();
-        foreach ($model as $item){
+        /*foreach ($model as $item){
             $comments[$item->id]= $value=count(Comment::find()->where('post_id = ' . $item->id)->all());
-        }
-        return $this->render('index', ['model' => $model,
-                                            'comments' => $comments
+        }*/
+        return $this->render('index', ['model' => $model
             ]);
     }
 

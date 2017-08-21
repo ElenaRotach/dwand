@@ -36,8 +36,15 @@ var startFrom = 10;
             $.each(data, function(index, data){
 
             /* Отбираем по идентификатору блок со статьями и дозаполняем его новыми данными */
-            $("#articles").append("<p><b>" + data.title + "</b><br />" + data.text + "</p>");
-            });
+            /*$("#articles").append("<p><b>" + data.title + "</b><br />" + data.text + "</p>");
+            });*/
+            $('article').last().after('<article class="col-lg-12">'+
+                '<div class="post_content">'+
+                    '<h3><a href="/post/post?id="' + data[index]['id'] + '>' + data[index]['title'] + '</a>&emsp;<i class="fa fa-external-link"></i></h3>' +
+                    '<span>' + data[index]['description'] + '</span><a href="/post/post?id="' + data[index]['id'] + '>&emsp;<i class="fa fa-external-link"></i></span>' +
+                '</div><div class="views col-lg-6"><i class="fa fa-eye" aria-hidden="true"></i>&emsp;Просмотров: ' + data[index]['views'] + '</div>' +
+                '<div class="comments col-lg-6"><i class="fa fa-comments-o" aria-hidden="true">Комментарии: ' +  data[index]['comments'] + '</div>' +
+            '</article>');
 
             /* По факту окончания запроса снова меняем значение флага на false */
             inProgress = false;
