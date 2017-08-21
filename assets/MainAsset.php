@@ -22,6 +22,7 @@ class PostAsset extends AssetBundle
         'css/all_post.css',
     ];
     public $js = [
+        'js/all_post.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
