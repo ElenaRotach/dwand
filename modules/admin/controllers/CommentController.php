@@ -63,13 +63,22 @@ class CommentController extends Controller
     public function actionCreate()
     {
         $model = new Comment();
+        if(Yii::$app->request->isGet) {
+            $request = Yii::$app->request->get();
+            $model->user_id = $request['user_id'];
+            $model->post_id = $request['post_id'];
+            $model->test = $request['test'];
+            if ($model->save()) {
+                //var_dump($model);exit();
+                // if ($model->load(Yii::$app->request->get())){// && $model->save()) {
+                //var_dump($model->id);
+                return $model;//$this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return false;//$this->render('create', [
+                //'model' => $model,
+                //]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            }
         }
     }
 
